@@ -1,0 +1,22 @@
+server:
+  port: 8030
+spring:
+  application:
+    name: demo
+  datasource:
+    url: jdbc:mysql://localhost/users_service
+    username: root
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  data: # Configuración MongoDB
+    mongodb:
+      host: localhost
+      port: 27017
+      database: product_service
+
+logging:
+  level:
+    root: debug
