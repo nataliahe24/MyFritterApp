@@ -28,40 +28,16 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductResponse createProduct(ProductRequest request, MultipartFile imageFile) throws IOException {
 
-
-        String uploadDir = "uploads";
-        Path uploadPath = Paths.get(uploadDir);
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        String fileName = imageFile.getOriginalFilename();
-        Path filePath = uploadPath.resolve(fileName);
-
-        Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
+    public ProductResponse createProduct(ProductRequest request) {
         ProductEntity product = new ProductEntity();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setImagePath(filePath.toString());
 
         ProductEntity savedProduct = productRepository.save(product);
-
-        ProductResponse response = new ProductResponse(
-                savedProduct.getId(),
-                savedProduct.getName(),
-                savedProduct.getDescription(),
-                savedProduct.getPrice(),
-                savedProduct.getImagePath()
-        );
-
-        return response;
+        return mapToResponse(savedProduct);
     }
-
     public PageResult<ProductResponse> getAllProducts(int page, int size) {
         Page<ProductEntity> productPage = productRepository.findAll(PageRequest.of(page, size));
         List<ProductResponse> content = productPage.getContent()
@@ -78,7 +54,7 @@ public class ProductService {
     }
 
 
-    public ProductResponse updateProduct(Long id, ProductRequest request) {
+    public ProductResponse updateProduct(String id, ProductRequest request) {
         ProductEntity product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
 
@@ -90,8 +66,8 @@ public class ProductService {
         return mapToResponse(updatedProduct);
     }
 
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+    public void deleteProduct(String id) {
+        productRepository.deleteProductById(id);
     }
 
     private ProductResponse mapToResponse(ProductEntity product) {
@@ -100,19 +76,6 @@ public class ProductService {
         response.setName(product.getName());
         response.setDescription(product.getDescription());
         response.setPrice(product.getPrice());
-        response.getImagePath();
         return response;
-    }
-    private String saveImageToFileSystem(MultipartFile file) {
-        try {
-            String folder = "uploads/";
-            String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(folder + filename);
-            Files.createDirectories(path.getParent());
-            Files.write(path, file.getBytes());
-            return path.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar la imagen", e);
-        }
     }
 }

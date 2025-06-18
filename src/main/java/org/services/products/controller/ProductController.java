@@ -8,9 +8,7 @@ import org.services.products.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.services.products.utils.page.PageResult;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 
 
 @RestController
@@ -21,8 +19,8 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestPart("product") ProductRequest request, @RequestPart("image") MultipartFile imageFile) throws IOException {
-        return ResponseEntity.ok(productService.createProduct(request, imageFile));
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request) {
+        return ResponseEntity.ok(productService.createProduct(request));
     }
 
     @GetMapping
@@ -34,13 +32,13 @@ public class ProductController {
 
 
     @PutMapping
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request) {
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable String id, @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.updateProduct(id, request));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<String> deleteProduct(@RequestParam String id) {
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Eliminado correctamente");
     }
 }
