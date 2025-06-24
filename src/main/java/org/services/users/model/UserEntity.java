@@ -1,10 +1,7 @@
 package org.services.users.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +23,9 @@ public class UserEntity {
     private LocalDate birthDate;
     private String email;
     private String password;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
 
     public void setId(Long id) {
         this.id = id;
@@ -57,5 +57,9 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setRole(RoleEntity role) {
+        this.role = role;
     }
 }
