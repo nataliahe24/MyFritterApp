@@ -1,6 +1,7 @@
 package org.services.users.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.services.configurations.exceptions.ExceptionMessages;
 import org.services.users.dto.request.LoginRequest;
 import org.services.users.dto.response.LoginResponse;
 import org.services.users.service.LoginService;
@@ -21,7 +22,7 @@ public class LoginController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = loginService.login(loginRequest);
 
-        if ("Login exitoso".equals(loginResponse.message())) {
+        if (ExceptionMessages.LOGIN_SUCCESS_MESSAGE_ES.equals(loginResponse.message())) {
             return ResponseEntity.ok(loginResponse);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResponse);
