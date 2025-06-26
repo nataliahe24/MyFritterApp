@@ -2,6 +2,7 @@ package org.services.users.service;
 
 import lombok.RequiredArgsConstructor;
 import org.services.users.dto.request.CreateUserRequest;
+import org.services.users.dto.response.UserResponse;
 import org.services.users.model.UserEntity;
 import org.services.users.model.RoleEntity;
 import org.services.users.repository.RoleRepository;
@@ -10,8 +11,10 @@ import org.services.users.utils.config.PasswordEncoderAdapter;
 import org.services.users.utils.exceptions.UserAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +54,19 @@ public class UserService {
         user.setPassword(encodedPassword);
 
         return userRepository.save(user);
+    }
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserResponse(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getIdentityDocument(),
+                        user.getPhoneNumber(),
+                        user.getBirthDate(),
+                        user.getEmail(),
+                        user.getRole().getName()
+                ))
+                .collect(Collectors.toList());
     }
     
     private boolean isValidEmail(String email) {
