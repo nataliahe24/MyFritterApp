@@ -9,11 +9,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductResponse {
 
-    private Long id;
+    private String id;
     private String name;
     private String description;
     private double price;
-    private String imagePath;
+    private String imageId;
 
     public ProductResponse() {
 

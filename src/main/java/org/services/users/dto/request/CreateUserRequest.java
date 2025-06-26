@@ -16,5 +16,6 @@ public class CreateUserRequest {
     private LocalDate birthDate;
     private String email;
     private String password;
+    private String role;
 
 }
