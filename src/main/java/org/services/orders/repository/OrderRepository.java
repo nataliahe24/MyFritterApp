@@ -1,5 +1,4 @@
 package org.services.orders.repository;
-
 import org.services.orders.model.OrderEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
