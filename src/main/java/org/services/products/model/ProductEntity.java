@@ -5,14 +5,14 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "products") // MongoDB collection name
+@Document(collection = "products")
 public class ProductEntity {
 
     @Id
-    private String id; // MongoDB usa generalmente String para IDs (ObjectId)
+    private String id;
 
     private String name;
     private String description;
     private double price;
-    private String imageId; // GridFS file ID for the product image
+    private String imageId;
 }
