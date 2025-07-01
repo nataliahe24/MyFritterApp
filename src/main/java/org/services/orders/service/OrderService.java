@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.services.orders.dto.request.CreateOrderRequest;
 import org.services.orders.dto.response.CreateOrderResponse;
 import org.services.orders.dto.response.OrderResponse;
-import org.services.orders.exceptions.InsufficientStockException;
 import org.services.orders.exceptions.OrderException;
 import org.services.orders.exceptions.ProductNotFoundException;
 import org.services.orders.model.OrderEntity;
-import org.services.orders.model.OrderItem;
+import org.services.orders.utils.OrderItem;
 import org.services.orders.repository.OrderRepository;
 import org.services.orders.utils.TrackingCodeGenerator;
 import org.services.products.model.ProductEntity;
@@ -46,16 +45,16 @@ public class OrderService {
             throw new OrderException("La dirección de envío es requerida");
         }
 
-        // Validar método de pago
+
         if (request.getPaymentMethod() == null || request.getPaymentMethod().trim().isEmpty()) {
             throw new OrderException("El método de pago es requerido");
         }
 
-        // Validar productos y calcular total
+
         List<OrderItem> orderItems = validateAndCreateOrderItems(request.getItems());
         BigDecimal total = calculateTotal(orderItems);
 
-        // Crear el pedido
+
         OrderEntity order = new OrderEntity();
         order.setUserId(userId);
         order.setItems(orderItems);
@@ -67,7 +66,7 @@ public class OrderService {
         order.setPaymentMethod(request.getPaymentMethod());
         order.setTrackingCode(generateUniqueTrackingCode());
 
-        // Guardar el pedido
+
         OrderEntity savedOrder = orderRepository.save(order);
 
         log.info("Order created successfully with ID: {}", savedOrder.getId());
@@ -102,7 +101,7 @@ public class OrderService {
         
         OrderEntity orderEntity = order.get();
         
-        // Verificar que el pedido pertenece al usuario
+
         if (!orderEntity.getUserId().equals(userId)) {
             throw new OrderException("No tienes permisos para ver este pedido");
         }
@@ -148,7 +147,7 @@ public class OrderService {
     }
 
     private OrderItem validateAndCreateOrderItem(CreateOrderRequest.OrderItemRequest itemRequest) {
-        // Validar que el producto existe
+
         Optional<ProductEntity> productOpt = productRepository.findById(itemRequest.getProductId());
         
         if (productOpt.isEmpty()) {
@@ -157,17 +156,11 @@ public class OrderService {
         
         ProductEntity product = productOpt.get();
         
-        // Validar cantidad
+
         if (itemRequest.getQuantity() == null || itemRequest.getQuantity() <= 0) {
             throw new OrderException("La cantidad debe ser mayor a 0");
         }
-        
-        // TODO: Validar stock si implementas control de inventario
-        // if (product.getStock() < itemRequest.getQuantity()) {
-        //     throw new InsufficientStockException("Stock insuficiente para el producto: " + product.getName());
-        // }
-        
-        // Crear el item del pedido
+
         OrderItem orderItem = new OrderItem();
         orderItem.setProductId(product.getId());
         orderItem.setProductName(product.getName());
