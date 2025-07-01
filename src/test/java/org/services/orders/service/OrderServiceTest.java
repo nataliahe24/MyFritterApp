@@ -12,13 +12,12 @@ import org.services.orders.dto.response.OrderResponse;
 import org.services.orders.exceptions.OrderException;
 import org.services.orders.exceptions.ProductNotFoundException;
 import org.services.orders.model.OrderEntity;
-import org.services.orders.model.ShippingAddress;
+import org.services.orders.utils.ShippingAddress;
 import org.services.orders.repository.OrderRepository;
 import org.services.orders.utils.TrackingCodeGenerator;
 import org.services.products.model.ProductEntity;
 import org.services.products.repository.ProductRepository;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
