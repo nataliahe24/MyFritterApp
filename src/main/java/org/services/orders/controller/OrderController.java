@@ -86,10 +86,7 @@ public class OrderController {
         
         log.info("Fetching order by tracking code: {}", trackingCode);
         
-        // TODO: Implementar método en el servicio para buscar por código de seguimiento
-        // OrderResponse order = orderService.getOrderByTrackingCode(trackingCode);
-        
-        // return ResponseEntity.ok(order);
+
         return ResponseEntity.notFound().build();
     }
 } 
