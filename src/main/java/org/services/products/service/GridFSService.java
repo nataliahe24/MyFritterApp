@@ -24,7 +24,7 @@ public class GridFSService {
     );
 
     public String uploadFile(MultipartFile file) throws IOException {
-        // Validate file type
+
         if (file == null || file.isEmpty()) {
             throw new InvalidImageFormatException("File cannot be null or empty");
         }
@@ -34,7 +34,7 @@ public class GridFSService {
             throw new InvalidImageFormatException("Only image files are allowed. Supported types: JPEG, PNG, GIF, WEBP");
         }
         
-        // Validate file size (max 10MB)
+
         if (file.getSize() > 10 * 1024 * 1024) {
             throw new InvalidImageFormatException("File size cannot exceed 10MB");
         }

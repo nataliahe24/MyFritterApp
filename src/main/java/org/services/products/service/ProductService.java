@@ -1,6 +1,7 @@
 package org.services.products.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Request;
 import org.services.configurations.exceptions.ExceptionMessages;
 import org.services.products.dto.request.ProductRequest;
 import org.services.products.dto.response.ProductResponse;
@@ -28,10 +29,11 @@ public class ProductService {
     private final GridFSService gridFSService;
 
     public SaveProductResponse createProduct(ProductRequest request) {
-        ProductEntity product = new ProductEntity();
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
+        ProductEntity product = new ProductEntity(
+                request.getName(),
+                request.getDescription(),
+                request.getPrice()
+        );
 
         if (request.getImage() != null && !request.getImage().isEmpty()) {
             try {

@@ -1,15 +1,16 @@
 package org.services.products.utils.page;
 
+import lombok.Data;
 import lombok.Getter;
 
 import java.util.List;
 
-@Getter
+@Data
 public class PageResult<T> {
     private final List<T> content;
     private final int page;
     private final int size;
-    private final int totalPages;
+    private  int totalPages;
     private final int totalElements;
 
     public PageResult(List<T> content, int page, int size, int totalElements) {
@@ -20,13 +21,4 @@ public class PageResult<T> {
         this.totalPages = (int) Math.ceil((double) totalElements/size);
     }
 
-    @Override
-    public String toString() {
-        return "PageResult{" +
-                "content=" + content +
-                ", page=" + page +
-                ", size=" + size +
-                ", totalPages=" + totalPages +
-                '}';
-    }
 }

@@ -35,12 +35,12 @@ public class OrderService {
     public CreateOrderResponse createOrder(CreateOrderRequest request, Long userId) {
         log.info("Creating order for user: {}", userId);
 
-        // Validar que el pedido no esté vacío
+
         if (request.getItems() == null || request.getItems().isEmpty()) {
             throw new OrderException("El pedido no puede estar vacío");
         }
 
-        // Validar dirección de envío
+
         if (request.getShippingAddress() == null) {
             throw new OrderException("La dirección de envío es requerida");
         }
