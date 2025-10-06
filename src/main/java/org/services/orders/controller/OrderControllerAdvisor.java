@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
 
+import static org.services.configurations.exceptions.ExceptionMessages.INVALID_PARAMETER_TYPE_MESSAGE_ES;
+
 @Slf4j
 @ControllerAdvice
 public class OrderControllerAdvisor {
@@ -56,18 +58,7 @@ public class OrderControllerAdvisor {
         return ResponseEntity
                 .badRequest()
                 .body(new ExceptionResponse(
-                        "Parámetros inválidos",
-                        LocalDateTime.now()));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleGenericException(Exception exception) {
-        log.error("Unexpected error: {}", exception.getMessage(), exception);
-        
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ExceptionResponse(
-                        "Error interno del servidor",
+                        INVALID_PARAMETER_TYPE_MESSAGE_ES ,
                         LocalDateTime.now()));
     }
 } 
