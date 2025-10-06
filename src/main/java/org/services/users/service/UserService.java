@@ -37,7 +37,7 @@ public class UserService {
             throw new IllegalArgumentException("Invalid email format");
         }
 
-        RoleEntity role = roleRepository.findByName(request.getRole())
+        RoleEntity role = roleRepository.findByName(request.getRole().toUpperCase())
                 .orElseThrow(() -> new IllegalArgumentException("Rol no encontrado: " + request.getRole()));
 
         UserEntity user = new UserEntity();
