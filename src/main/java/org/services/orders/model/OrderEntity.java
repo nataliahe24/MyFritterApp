@@ -1,8 +1,6 @@
 package org.services.orders.model;
 
 import lombok.Data;
-import org.services.orders.utils.OrderItem;
-import org.services.orders.utils.ShippingAddress;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

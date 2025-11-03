@@ -1,7 +1,7 @@
 package org.services.orders.dto.request;
 
 import lombok.Data;
-import org.services.orders.utils.ShippingAddress;
+import org.services.orders.model.ShippingAddress;
 
 import java.util.List;
 

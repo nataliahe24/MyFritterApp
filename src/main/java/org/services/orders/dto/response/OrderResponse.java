@@ -3,8 +3,7 @@ package org.services.orders.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.services.orders.utils.OrderItem;
-import org.services.orders.utils.ShippingAddress;
+import org.services.orders.model.ShippingAddress;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
