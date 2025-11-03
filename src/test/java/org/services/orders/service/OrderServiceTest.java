@@ -9,8 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.services.orders.dto.request.CreateOrderRequest;
 import org.services.orders.dto.response.CreateOrderResponse;
 import org.services.orders.dto.response.OrderResponse;
-import org.services.orders.exceptions.OrderException;
-import org.services.orders.exceptions.ProductNotFoundException;
+import org.services.orders.utils.exceptions.InvalidPaymentMethodException;
+import org.services.orders.utils.exceptions.ProductNotFoundException;
 import org.services.orders.model.OrderEntity;
 import org.services.orders.model.OrderItem;
 import org.services.orders.model.ShippingAddress;
@@ -50,7 +50,6 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Setup test product
         testProduct = new ProductEntity();
         testProduct.setId("test-product-id");
         testProduct.setName("Test Product");
@@ -102,16 +101,16 @@ class OrderServiceTest {
 
     @Test
     void createOrder_Success() {
-        // Arrange
+
         when(productRepository.findById("test-product-id")).thenReturn(Optional.of(testProduct));
         when(trackingCodeGenerator.generateTrackingCode()).thenReturn("ORD-20250115-1234");
         when(orderRepository.existsByTrackingCode("ORD-20250115-1234")).thenReturn(false);
         when(orderRepository.save(any(OrderEntity.class))).thenReturn(savedOrder);
 
-        // Act
+
         CreateOrderResponse result = orderService.createOrder(validRequest, 123L);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals("Pedido creado exitosamente", result.getMessage());
         assertEquals("order-id", result.getOrderId());
@@ -129,7 +128,7 @@ class OrderServiceTest {
         validRequest.setItems(Arrays.asList());
 
 
-        assertThrows(OrderException.class, () -> {
+        assertThrows(InvalidPaymentMethodException.class, () -> {
             orderService.createOrder(validRequest, 123L);
         });
 
@@ -143,7 +142,7 @@ class OrderServiceTest {
         validRequest.setShippingAddress(null);
 
 
-        assertThrows(OrderException.class, () -> {
+        assertThrows(InvalidPaymentMethodException.class, () -> {
             orderService.createOrder(validRequest, 123L);
         });
 
@@ -157,7 +156,7 @@ class OrderServiceTest {
         validRequest.setPaymentMethod(null);
 
 
-        assertThrows(OrderException.class, () -> {
+        assertThrows(InvalidPaymentMethodException.class, () -> {
             orderService.createOrder(validRequest, 123L);
         });
 
@@ -197,7 +196,7 @@ class OrderServiceTest {
         validRequest.setItems(List.of(itemRequest));
 
 
-        assertThrows(OrderException.class, () -> {
+        assertThrows(InvalidPaymentMethodException.class, () -> {
             orderService.createOrder(validRequest, 123L);
         });
 
@@ -207,14 +206,14 @@ class OrderServiceTest {
 
     @Test
     void getUserOrders_Success() {
-        // Arrange
+
         List<OrderEntity> orders = Arrays.asList(savedOrder);
         when(orderRepository.findByUserIdOrderByCreatedAtDesc(123L)).thenReturn(orders);
 
-        // Act
+
         List<OrderResponse> result = orderService.getUserOrders(123L);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(savedOrder.getId(), result.get(0).getId());
@@ -225,13 +224,13 @@ class OrderServiceTest {
 
     @Test
     void getOrderById_Success() {
-        // Arrange
+
         when(orderRepository.findById("order-id")).thenReturn(Optional.of(savedOrder));
 
-        // Act
+
         OrderResponse result = orderService.getOrderById("order-id", 123L);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals(savedOrder.getId(), result.getId());
         assertEquals(savedOrder.getUserId(), result.getUserId());
@@ -241,11 +240,11 @@ class OrderServiceTest {
 
     @Test
     void getOrderById_NotFound_ThrowsException() {
-        // Arrange
+
         when(orderRepository.findById("non-existent-id")).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(OrderException.class, () -> {
+
+        assertThrows(InvalidPaymentMethodException.class, () -> {
             orderService.getOrderById("non-existent-id", 123L);
         });
 
@@ -254,11 +253,11 @@ class OrderServiceTest {
 
     @Test
     void getOrderById_Unauthorized_ThrowsException() {
-        // Arrange
+
         when(orderRepository.findById("order-id")).thenReturn(Optional.of(savedOrder));
 
-        // Act & Assert
-        assertThrows(OrderException.class, () -> {
+
+        assertThrows(InvalidPaymentMethodException.class, () -> {
             orderService.getOrderById("order-id", 999L); // Different user
         });
 
@@ -268,11 +267,11 @@ class OrderServiceTest {
 
     @Test
     void updateOrderStatus_NotFound_ThrowsException() {
-        // Arrange
+
         when(orderRepository.findById("non-existent-id")).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(OrderException.class, () -> {
+
+        assertThrows(InvalidPaymentMethodException.class, () -> {
             orderService.updateOrderStatus("non-existent-id", OrderEntity.OrderStatus.PROCESSING);
         });
 

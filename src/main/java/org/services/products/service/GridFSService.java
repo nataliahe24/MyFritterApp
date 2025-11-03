@@ -3,6 +3,7 @@ package org.services.products.service;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.services.configurations.exceptions.ExceptionMessages;
 import org.services.products.utils.exceptions.ImageUploadException;
 import org.services.products.utils.exceptions.InvalidImageFormatException;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.services.configurations.exceptions.ExceptionMessages.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +29,17 @@ public class GridFSService {
     public String uploadFile(MultipartFile file) throws IOException {
 
         if (file == null || file.isEmpty()) {
-            throw new InvalidImageFormatException("File cannot be null or empty");
+            throw new InvalidImageFormatException(IMAGE_FILE_EMPTY_MESSAGE_ES);
         }
         
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_IMAGE_TYPES.contains(contentType.toLowerCase())) {
-            throw new InvalidImageFormatException("Only image files are allowed. Supported types: JPEG, PNG, GIF, WEBP");
+            throw new InvalidImageFormatException(INVALID_IMAGE_FORMAT_MESSAGE_ES);
         }
         
 
         if (file.getSize() > 10 * 1024 * 1024) {
-            throw new InvalidImageFormatException("File size cannot exceed 10MB");
+            throw new InvalidImageFormatException(IMAGE_TOO_LARGE_MESSAGE_ES);
         }
         
         String filename = file.getOriginalFilename();
@@ -56,11 +59,7 @@ public class GridFSService {
                 org.springframework.data.mongodb.core.query.Criteria.where("_id").is(fileId)
             )
         );
-        
-        if (gridFSFile == null) {
-            throw new ImageUploadException("File not found with id: " + fileId);
-        }
-        
+
         return gridFsTemplate.getResource(gridFSFile).getInputStream();
     }
 

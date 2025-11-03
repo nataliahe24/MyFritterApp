@@ -2,9 +2,7 @@ package org.services.orders.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.services.configurations.exceptions.ExceptionResponse;
-import org.services.orders.exceptions.InsufficientStockException;
-import org.services.orders.exceptions.OrderException;
-import org.services.orders.exceptions.ProductNotFoundException;
+import org.services.orders.utils.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,8 +16,8 @@ import static org.services.configurations.exceptions.ExceptionMessages.INVALID_P
 @ControllerAdvice
 public class OrderControllerAdvisor {
 
-    @ExceptionHandler(OrderException.class)
-    public ResponseEntity<ExceptionResponse> handleOrderException(OrderException exception) {
+    @ExceptionHandler(EmptyOrderException.class)
+    public ResponseEntity<ExceptionResponse> handleEmptyOrderException(EmptyOrderException exception) {
         log.error("Order error: {}", exception.getMessage());
         
         return ResponseEntity
@@ -51,14 +49,25 @@ public class OrderControllerAdvisor {
                         LocalDateTime.now()));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+    @ExceptionHandler(InvalidPaymentMethodException.class)
+    public ResponseEntity<ExceptionResponse> handlePaymentMethodException(InvalidPaymentMethodException exception) {
         log.error("Invalid argument: {}", exception.getMessage());
         
         return ResponseEntity
                 .badRequest()
                 .body(new ExceptionResponse(
-                        INVALID_PARAMETER_TYPE_MESSAGE_ES ,
+                        exception.getMessage() ,
+                        LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(InvalidAddressException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidAddressException(InvalidAddressException exception) {
+        log.error("Invalid address: {}", exception.getMessage());
+
+        return ResponseEntity
+                .badRequest()
+                .body(new ExceptionResponse(
+                        exception.getMessage() ,
                         LocalDateTime.now()));
     }
 } 

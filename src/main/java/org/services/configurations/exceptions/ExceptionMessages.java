@@ -18,7 +18,7 @@ public final class ExceptionMessages {
     
     // User Exceptions - Mensajes en Español
     public static final String USER_NOT_FOUND_MESSAGE_ES = "Usuario no encontrado con id: ";
-    public static final String USER_ALREADY_EXISTS = "El usuario ya existe";
+    public static final String USER_ALREADY_EXISTS = "El usuario ya existe :";
     public static final String INVALID_PASSWORD_MESSAGE_ES = "Contraseña incorrecta";
     public static final String USER_CREATION_ERROR_MESSAGE_ES = "Error al crear el usuario: ";
     public static final String USER_UPDATE_ERROR_MESSAGE_ES = "Error al actualizar el usuario: ";
@@ -45,6 +45,13 @@ public final class ExceptionMessages {
     public static final String USER_UPDATED_SUCCESS_MESSAGE_ES = "Usuario actualizado exitosamente";
     public static final String LOGIN_SUCCESS_MESSAGE_ES = "Inicio de sesión exitoso";
     public static final String IMAGE_UPLOADED_SUCCESS_MESSAGE_ES = "Imagen subida exitosamente";
+
+    public static final String ORDER_EMPTY = "Orden no puede estar vacia";
+    public static final String ADDRESS_IS_REQUIRED = "La direccion es requerida";
+    public static final String PAYMENT_IS_REQUIRED = "Metodo de p-ago es requerido";
+    public static final String INVALID_PAYMENT_METHOD = "Metodo de pago invalido";
+    public static final String ERROR_TRACKING_CODE = "No se pudo generar un código de seguimiento único";
+    public static final String ORDER_NOT_FOUND = "Orden no encontrada";
     
 
 }
