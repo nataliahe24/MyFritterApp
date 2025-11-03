@@ -2,11 +2,11 @@ package org.services.orders.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.services.configurations.exceptions.ExceptionMessages;
 import org.services.orders.dto.request.CreateOrderRequest;
 import org.services.orders.dto.response.CreateOrderResponse;
 import org.services.orders.dto.response.OrderResponse;
-import org.services.orders.exceptions.OrderException;
-import org.services.orders.exceptions.ProductNotFoundException;
+import org.services.orders.utils.exceptions.*;
 import org.services.orders.model.OrderEntity;
 import org.services.orders.model.OrderItem;
 import org.services.orders.repository.OrderRepository;
@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.services.configurations.exceptions.ExceptionMessages.*;
 
 @Slf4j
 @Service
@@ -37,17 +39,17 @@ public class OrderService {
 
 
         if (request.getItems() == null || request.getItems().isEmpty()) {
-            throw new OrderException("El pedido no puede estar vacío");
+            throw new EmptyOrderException(ExceptionMessages.ORDER_EMPTY);
         }
 
 
         if (request.getShippingAddress() == null) {
-            throw new OrderException("La dirección de envío es requerida");
+            throw new InvalidAddressException(ExceptionMessages.ADDRESS_IS_REQUIRED);
         }
 
 
         if (request.getPaymentMethod() == null || request.getPaymentMethod().trim().isEmpty()) {
-            throw new OrderException("El método de pago es requerido");
+            throw new InvalidPaymentMethodException(ExceptionMessages.PAYMENT_IS_REQUIRED);
         }
 
 
@@ -96,14 +98,14 @@ public class OrderService {
         Optional<OrderEntity> order = orderRepository.findById(orderId);
         
         if (order.isEmpty()) {
-            throw new OrderException("Pedido no encontrado");
+            throw new EmptyOrderException(ORDER_NOT_FOUND);
         }
         
         OrderEntity orderEntity = order.get();
         
 
         if (!orderEntity.getUserId().equals(userId)) {
-            throw new OrderException("No tienes permisos para ver este pedido");
+            throw new InvalidPaymentMethodException(INVALID_PAYMENT_METHOD);
         }
         
         return mapToOrderResponse(orderEntity);
@@ -126,7 +128,7 @@ public class OrderService {
         Optional<OrderEntity> orderOpt = orderRepository.findById(orderId);
         
         if (orderOpt.isEmpty()) {
-            throw new OrderException("Pedido no encontrado");
+            throw new OrderNotFoundException(ORDER_NOT_FOUND);
         }
         
         OrderEntity order = orderOpt.get();
@@ -135,8 +137,7 @@ public class OrderService {
         
         OrderEntity updatedOrder = orderRepository.save(order);
         
-        log.info("Order status updated successfully");
-        
+
         return mapToOrderResponse(updatedOrder);
     }
 
@@ -151,14 +152,14 @@ public class OrderService {
         Optional<ProductEntity> productOpt = productRepository.findById(itemRequest.getProductId());
         
         if (productOpt.isEmpty()) {
-            throw new ProductNotFoundException("Producto no encontrado: " + itemRequest.getProductId());
+            throw new ProductNotFoundException( PRODUCT_NOT_FOUND_MESSAGE_ES + itemRequest.getProductId());
         }
         
         ProductEntity product = productOpt.get();
         
 
         if (itemRequest.getQuantity() == null || itemRequest.getQuantity() <= 0) {
-            throw new OrderException("La cantidad debe ser mayor a 0");
+            throw new EmptyOrderException(ORDER_EMPTY);
         }
 
         OrderItem orderItem = new OrderItem();
@@ -188,7 +189,7 @@ public class OrderService {
             attempts++;
             
             if (attempts > maxAttempts) {
-                throw new OrderException("No se pudo generar un código de seguimiento único");
+                throw new ErrorCreatingTrackingCodeException(ERROR_TRACKING_CODE);
             }
         } while (orderRepository.existsByTrackingCode(trackingCode));
         
@@ -206,8 +207,7 @@ public class OrderService {
         response.setShippingAddress(order.getShippingAddress());
         response.setPaymentMethod(order.getPaymentMethod());
         response.setTrackingCode(order.getTrackingCode());
-        
-        // Mapear items
+
         List<OrderResponse.OrderItemResponse> itemResponses = order.getItems().stream()
                 .map(this::mapToOrderItemResponse)
                 .collect(Collectors.toList());

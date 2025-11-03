@@ -21,6 +21,8 @@ import java.util.List;
 
 import java.util.stream.Collectors;
 
+import static org.services.configurations.exceptions.ExceptionMessages.*;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -40,12 +42,12 @@ public class ProductService {
                 String imageId = gridFSService.uploadFile(request.getImage());
                 product.setImageId(imageId);
             } catch (IOException e) {
-                throw new ImageUploadException("Error uploading image: " + e.getMessage(), e);
+                throw new ImageUploadException(IMAGE_UPLOAD_ERROR_MESSAGE_ES + e.getMessage(), e);
             }
         }
 
         ProductEntity savedProduct = productRepository.save(product);
-        return new SaveProductResponse(ExceptionMessages.PRODUCT_CREATED_SUCCESS_MESSAGE_ES, LocalDateTime.now());
+        return new SaveProductResponse(PRODUCT_CREATED_SUCCESS_MESSAGE_ES, LocalDateTime.now());
     }
 
     public PageResult<ProductResponse> getAllProducts(int page, int size) {
@@ -65,7 +67,7 @@ public class ProductService {
 
     public ProductResponse updateProduct(String id, ProductRequest request) {
         ProductEntity product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con id: " + id));
+                .orElseThrow(() -> new ProductNotFoundException(PRODUCT_NOT_FOUND_MESSAGE_ES + id));
 
         product.setName(request.getName());
         product.setDescription(request.getDescription());
@@ -82,7 +84,7 @@ public class ProductService {
                 String imageId = gridFSService.uploadFile(request.getImage());
                 product.setImageId(imageId);
             } catch (IOException e) {
-                throw new ImageUploadException("Error uploading image: " + e.getMessage(), e);
+                throw new ImageUploadException(IMAGE_UPLOAD_ERROR_MESSAGE_ES + e.getMessage(), e);
             }
         }
 
@@ -92,7 +94,7 @@ public class ProductService {
 
     public void deleteProduct(String id) {
         ProductEntity product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con id: " + id));
+                .orElseThrow(() -> new ProductNotFoundException(PRODUCT_NOT_FOUND_MESSAGE_ES + id));
 
         if (product.getImageId() != null) {
                 gridFSService.deleteFile(product.getImageId());

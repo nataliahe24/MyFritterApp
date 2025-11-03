@@ -1,4 +1,4 @@
-package org.services.orders.exceptions;
+package org.services.orders.utils.exceptions;
 
 public class ProductNotFoundException extends RuntimeException {
 
