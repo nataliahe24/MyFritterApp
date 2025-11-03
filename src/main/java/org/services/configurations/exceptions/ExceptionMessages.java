@@ -18,7 +18,7 @@ public final class ExceptionMessages {
     
     // User Exceptions - Mensajes en Español
     public static final String USER_NOT_FOUND_MESSAGE_ES = "Usuario no encontrado con id: ";
-    public static final String USER_ALREADY_EXISTS_MESSAGE_ES = "El usuario ya existe con el email: ";
+    public static final String USER_ALREADY_EXISTS = "El usuario ya existe";
     public static final String INVALID_PASSWORD_MESSAGE_ES = "Contraseña incorrecta";
     public static final String USER_CREATION_ERROR_MESSAGE_ES = "Error al crear el usuario: ";
     public static final String USER_UPDATE_ERROR_MESSAGE_ES = "Error al actualizar el usuario: ";
@@ -29,7 +29,7 @@ public final class ExceptionMessages {
     // Validation Exceptions - Mensajes en Español
     public static final String VALIDATION_ERROR_MESSAGE_ES = "Error de validación: ";
     public static final String REQUIRED_FIELD_MESSAGE_ES = "Campo requerido: ";
-    public static final String INVALID_PARAMETER_TYPE_MESSAGE_ES = "Tipo de parámetro inválido para: ";
+    public static final String INVALID_PARAMETER_TYPE_MESSAGE_ES = "Tipo de parámetro inválido";
     
     // Generic Exceptions - Mensajes en Español
     public static final String INTERNAL_SERVER_ERROR_MESSAGE_ES = "Ha ocurrido un error interno del servidor";
@@ -46,11 +46,5 @@ public final class ExceptionMessages {
     public static final String LOGIN_SUCCESS_MESSAGE_ES = "Inicio de sesión exitoso";
     public static final String IMAGE_UPLOADED_SUCCESS_MESSAGE_ES = "Imagen subida exitosamente";
     
-    // Warning Messages - Mensajes de Advertencia en Español
-    public static final String IMAGE_SIZE_WARNING_MESSAGE_ES = "Advertencia: El archivo es grande, puede tardar en subirse";
-    public static final String OLD_IMAGE_DELETED_MESSAGE_ES = "Imagen anterior eliminada automáticamente";
-    
-    // Info Messages - Mensajes Informativos en Español
-    public static final String PROCESSING_IMAGE_MESSAGE_ES = "Procesando imagen...";
-    public static final String VALIDATING_FILE_MESSAGE_ES = "Validando archivo...";
-} 
+
+}

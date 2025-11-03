@@ -1,4 +1,4 @@
-package org.services.orders.utils;
+package org.services.orders.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

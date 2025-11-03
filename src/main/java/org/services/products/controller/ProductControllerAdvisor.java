@@ -10,13 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 
 import java.time.LocalDateTime;
 
 import static org.services.configurations.exceptions.ExceptionMessages.PRODUCT_NOT_FOUND_MESSAGE_ES;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 
 @Slf4j
 @ControllerAdvice
@@ -56,19 +55,5 @@ public class ProductControllerAdvisor {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleGenericException(
-            Exception exception, WebRequest request) {
-        
-        log.error("Unexpected error: {}", exception.getMessage(), exception);
-        
-        ExceptionResponse response = new ExceptionResponse(
-                ExceptionMessages.INTERNAL_SERVER_ERROR_MESSAGE_ES,
-                LocalDateTime.now()
-        );
-        
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(response);
-    }
 
 } 
